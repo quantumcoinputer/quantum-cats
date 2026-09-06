@@ -34,10 +34,14 @@ internally consistent, so public-record checks alone do not authenticate IBM.
 
 ## 2. Compare directly with IBM
 
-[Open a reviewer-access request](https://github.com/quantumcoinputer/quantum-cats/issues/new?template=reviewer-access.yml).
-Include the public job or token you want to inspect. Keep your IBM email and all
-credentials out of the public issue. Arrange a private contact channel with the
-maintainer for the email IBM needs to send the invitation.
+[Open the review section](https://quantumcats.art/#review) and select
+**Request IBM Reader access**. Enter the email used for your IBM Quantum account
+in the popup and submit it. The email is stored privately for the maintainer to
+arrange your invitation. No wallet or GitHub account is required. Submit only
+the account email; keep API keys and wallet keys private.
+
+GitHub issues remain available for public technical questions. Keep account
+emails and credentials out of those issues.
 
 1. Create your own IBM Cloud account.
 2. The maintainer invites that account and assigns the collection's Reader access.
@@ -53,8 +57,9 @@ node verify.mjs 1 --ibm
 unset IBM_QUANTUM_TOKEN
 ```
 
-The current process requires a maintainer-issued invitation. The request form
-is not automatic enrollment. IBM retains job data subject to its
+The current process requires a maintainer-issued invitation. The website confirms
+that the request was saved; access begins after the invitation is issued and
+accepted. IBM retains job data subject to its
 [retention policy](https://quantum.cloud.ibm.com/docs/en/guides/secure-data), so
 perform direct comparisons while the source records remain available.
 
@@ -77,11 +82,11 @@ Sources: [IBM public-access scope](https://cloud.ibm.com/docs/account?topic=acco
 
 ## Maintainer setup
 
-Create an access group named `Quantum Cats Reviewers` in IBM Cloud IAM. Grant
-its members the **Reader service role**, restricted to the exact Quantum Compute
-instance that contains the collection's jobs. Use the same group for every
-reviewer. IBM's standard collaborators group permits job submission, so create
-a separate reviewer group with the narrower policy.
+The `Quantum Cats Reviewers` access group is configured in IBM Cloud IAM with
+the **Reader service role**, restricted to the collection's `quantum-cats-open`
+instance. Use this group for reviewers. For any future originating instance,
+configure and verify the same restricted Reader policy. IBM's standard
+collaborators group permits job submission, so keep reviewer access separate.
 
 The Reader role permits result reads. It does not grant job creation,
 cancellation, deletion, or account administration. If reviewers need additional
@@ -94,6 +99,14 @@ Invite each reviewer's IBM account and add it to this group. Future reviewers
 inherit the same Reader policy when added, without per-job role changes. IBM
 invitations still require the recipient to accept. Accept review requests
 regardless of NFT ownership; the account email is needed for the invitation.
+
+Website requests are in the site's private Netlify Blobs store,
+`quantum-cats-reviewer-requests`, under `requests/`. Access it through the
+authenticated Netlify project dashboard. The popup has no public request-listing
+endpoint and makes no IBM calls. Review these pending entries, issue the Reader
+invitation, and remove contact records when no longer needed. Treat each email
+as a request, not proof of account ownership; the recipient must accept IBM's
+invitation. The form enforces input validation and submission limits.
 
 An automatic request-and-invitation service is possible as a separate integration.
 It would still need each reviewer's identity and acceptance, and must grant only

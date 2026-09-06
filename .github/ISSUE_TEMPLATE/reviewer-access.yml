@@ -8,9 +8,10 @@ body:
         Everyone is welcome to review. Owning a cat is optional.
         Public archives and source code are available immediately.
         Direct IBM access requires an IBM account and an individual invitation.
-        This issue starts a maintainer-assisted request; it does not grant access automatically.
+        Submit your IBM account email privately at https://quantumcats.art/#review by selecting "Request IBM Reader access".
+        This issue is for public follow-up questions; access requires a maintainer-issued IBM invitation.
         Keep your IBM email, API keys, wallet keys, and account credentials out of this public issue.
-        Arrange a private contact channel with the maintainer before providing the invitation email.
+        The website form is the private contact channel for invitation emails.
   - type: input
     id: job
     attributes:
