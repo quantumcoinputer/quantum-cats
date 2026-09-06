@@ -315,9 +315,9 @@ rehearsal consumed approximately 0.000075 ETH.
 
 ## 13. Deployment checklist (mainnet)
 
-1. Split keys: a custodied owner key (holds `setMintToken`, `setOracle`,
-   `freezeRenderer`, `updateArchivePointer`) and a hot oracle key (holds no
-   power over funds or art).
+1. Operate from the funded deployment EOA (it serves as owner and oracle).
+   The roles are separable at any later time through `transferOwnership` and
+   `setOracle` without redeployment.
 2. Choose durable archive hosting; set `ARCHIVE_URI_BASE`; publish the
    `archive/` directory there.
 3. Enable IBM pay-as-you-go with an instance cost limit.
