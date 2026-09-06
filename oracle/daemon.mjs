@@ -60,7 +60,7 @@ const RESYNC_TICKS = Number(env("RESYNC_TICKS", "50"));
 const ARCHIVE_DIR = env("ARCHIVE_DIR", path.join(here, "..", "archive"));
 // public location where archive files get published (IPFS dir, GitHub raw, ...)
 const ARCHIVE_GITHUB_REPO = env("ARCHIVE_GITHUB_REPO", "");
-const ARCHIVE_GITHUB_BRANCH = env("ARCHIVE_GITHUB_BRANCH", "main");
+const ARCHIVE_GITHUB_BRANCH = env("ARCHIVE_GITHUB_BRANCH", "master");
 const ARCHIVE_GITHUB_PUBLISH = env("ARCHIVE_GITHUB_PUBLISH", "0") === "1";
 const githubArchiveBase = `https://raw.githubusercontent.com/${ARCHIVE_GITHUB_REPO}/${ARCHIVE_GITHUB_BRANCH}/archive/`;
 const ARCHIVE_URI_BASE = env("ARCHIVE_URI_BASE", ARCHIVE_GITHUB_REPO ? githubArchiveBase : "https://example.invalid/archive/");

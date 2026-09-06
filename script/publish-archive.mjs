@@ -21,7 +21,7 @@ if (!batch[8]) throw new Error('Batch is not resolved on-chain');
 const options = { jobId: batch[5], resultsHash: batch[4], configHash: batch[3],
   archiveDir: path.resolve(root, process.env.ARCHIVE_DIR || 'archive'),
   repository: process.env.ARCHIVE_GITHUB_REPO,
-  branch: process.env.ARCHIVE_GITHUB_BRANCH || 'main' };
+  branch: process.env.ARCHIVE_GITHUB_BRANCH || 'master' };
 if (process.argv.includes('--dry-run')) {
   const blob = validatePublication(options);
   console.log(`Validated batch ${process.argv[2]}: job ${options.jobId}, ${blob.length} bytes match the on-chain hashes. No publication performed.`);

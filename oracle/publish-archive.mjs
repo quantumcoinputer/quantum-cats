@@ -46,7 +46,7 @@ function github(args, body) {
 }
 
 export async function publishArchive(options, request = github) {
-  const { repository, branch = 'main', jobId } = options;
+  const { repository, branch = 'master', jobId } = options;
   if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository || '')) throw new Error('Set ARCHIVE_GITHUB_REPO to owner/repository');
   if (!/^[A-Za-z0-9._/-]+$/.test(branch) || branch.startsWith('-') || branch.includes('..')) throw new Error('Invalid archive branch');
   const blob = validatePublication(options);
@@ -58,8 +58,16 @@ export async function publishArchive(options, request = github) {
     if (existing.encoding !== 'base64' || !Buffer.from(existing.content, 'base64').equals(blob)) throw new Error('Published archive differs; immutable file will not be overwritten');
     return { status: 'already-published', url: existing.html_url };
   }
+  // Attribution is explicit and the authenticated account must match it.
+  // Never let another machine's Git or GitHub defaults choose a commit identity.
+  const user = await request(['user']);
+  if (user.login !== 'quantumcoinputer' || user.id !== 272529679)
+    throw new Error('Archive publication requires the authenticated quantumcoinputer account');
+  const identity = { name: 'quantumcoinputer', email: '272529679+quantumcoinputer@users.noreply.github.com' };
   const result = await request([endpoint, '--method', 'PUT', '--input', '-'], {
     message: `Archive IBM job ${jobId}`,
+    author: identity,
+    committer: identity,
     content: blob.toString('base64'),
     branch,
   });

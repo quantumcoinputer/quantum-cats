@@ -67,7 +67,7 @@ The other two descriptor-era archives include the full submitted ISA payload.
 ## Repository publication
 
 Canonical location:
-`https://raw.githubusercontent.com/quantumcoinputer/quantum-cats/main/archive/job-<jobId>.json`.
+`https://raw.githubusercontent.com/quantumcoinputer/quantum-cats/master/archive/job-<jobId>.json`.
 The production daemon publishes each resolved batch through
 `oracle/publish-archive.mjs` before reveal, when GitHub publication is enabled.
 Every future job file contains its exact experiment descriptor internally;

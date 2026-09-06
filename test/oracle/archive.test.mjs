@@ -23,15 +23,19 @@ test('publishes exactly the committed archive, without touching staged files or 
   try {
     const result = await publishArchive(options, async (args, body) => {
       calls.push({ args, body });
+      if (args[0] === 'user') return { login: 'quantumcoinputer', id: 272529679 };
       if (!body) throw Object.assign(new Error('missing'), { missing: true });
       assert.equal(Buffer.from(body.content, 'base64').toString(), blob.toString());
       assert.equal(body.sha, undefined);
+      assert.deepEqual(body.author, { name: 'quantumcoinputer', email: '272529679+quantumcoinputer@users.noreply.github.com' });
+      assert.deepEqual(body.committer, body.author);
+      assert.equal(body.message, `Archive IBM job ${jobId}`);
       assert.equal(body.branch, 'main');
       return { commit: { sha: 'commit' }, content: { html_url: 'https://example.test/archive' } };
     });
     assert.equal(result.status, 'published');
-    assert.equal(calls.length, 2);
-    assert.equal(calls[1].args[0], `repos/example/cats/contents/archive/job-${jobId}.json`);
+    assert.equal(calls.length, 3);
+    assert.equal(calls[2].args[0], `repos/example/cats/contents/archive/job-${jobId}.json`);
   } finally { rmSync(options.archiveDir, { recursive: true }); }
 });
 test('existing matching archive is idempotent; existing altered archive is never overwritten', async () => {
@@ -76,4 +80,15 @@ test('unavailable requested IBM check never returns a successful verification re
   assert.equal(verificationResult(checks, false).exitCode, 2);
   checks.ibm = 'FAIL';
   assert.equal(verificationResult(checks, true).exitCode, 1);
+});
+
+test('another authenticated GitHub account cannot create an archive commit', async () => {
+  const options = fixture();
+  try {
+    await assert.rejects(publishArchive(options, async (args, body) => {
+      assert.equal(body, undefined, 'no write may be attempted');
+      if (args[0] === 'user') return { login: 'another-user', id: 1 };
+      throw Object.assign(new Error('missing'), { missing: true });
+    }), /requires the authenticated quantumcoinputer account/);
+  } finally { rmSync(options.archiveDir, { recursive: true }); }
 });

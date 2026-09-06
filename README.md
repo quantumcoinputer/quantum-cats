@@ -97,7 +97,10 @@ seven-check verification passing, records in [`archive/`](archive/).
 Batch records are published in this repository's `archive/` directory. With
 `ARCHIVE_GITHUB_PUBLISH=1`, the daemon resolves a batch on-chain, uploads its
 canonical archive through GitHub's Contents API, then reveals the cats.
-Each new file receives its own commit. Existing identical files are accepted;
+Each new file receives its own commit on `master`. The publisher requires the
+authenticated `quantumcoinputer` account and explicitly sets both author and
+committer to that account’s GitHub noreply identity, with no co-author trailers.
+Existing identical files are accepted;
 existing different files are never overwritten. Publication failure retries the
 same batch and archive, without submitting another IBM job. Persistent failures
 park the batch for operator attention. Reveal waits for publication.
