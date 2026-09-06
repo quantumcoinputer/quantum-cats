@@ -41,13 +41,13 @@ Download the archive from the published location into `archive/`, or pass its
 local filename with `--archive`. The verifier currently reads local files; it
 displays the on-chain archive pointer without downloading it automatically.
 Archive verification needs no IBM credentials. Its circuit checks also require
-the Python/Qiskit dependencies listed below.
+the isolated Python/Qiskit setup in [REVIEWING.md](REVIEWING.md).
 Seven explicit checks, each with its own verdict: archive integrity, DNA at
 the assigned shot, backend, published circuit descriptor (byte-hashed and
 rebuilt independently from `traits.config.json`), execution ordering against
 the on-chain bind, submitted-circuit equivalence (the ISA payload IBM
-reports having received must prepare the same ideal state as the published
-experiment), and an optional live retrieval diff.
+reports having received must produce the same ideal measurement distribution
+as the published experiment), and an optional live retrieval diff.
 
 ## Setup
 

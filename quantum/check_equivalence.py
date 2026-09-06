@@ -2,8 +2,8 @@
 ISA-vs-logical circuit equivalence check (automates the reviewer's manual audit).
 
 Given a v3+ archive (embedded experiment descriptor + submitted ISA qasm3),
-verifies that the circuit IBM says it executed prepares the same ideal state
-as the published logical experiment:
+verifies that the circuit IBM says it executed produces the same ideal
+measurement distribution as the published logical experiment:
 
   1. rebuild the logical circuit from the archive's canonical op list
   2. parse the submitted ISA circuit; record its measurement wiring

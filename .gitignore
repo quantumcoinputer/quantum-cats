@@ -18,3 +18,4 @@ oracle/preview-observer.mjs
 oracle/state.json.tmp
 archive/exp-pending-*.json
 archive/preview-exp-*.json
+.venv/

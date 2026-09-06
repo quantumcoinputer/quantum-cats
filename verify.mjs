@@ -35,8 +35,8 @@ const [dna, revealed, , batchId, shotIndex] = await pub.readContract({
 const BITS = CONFIG.totalBits;
 console.log(`\nQuantum Cat #${tokenId}`);
 if (!revealed) {
-  console.log("Token is still in superposition — nothing to verify yet.");
-  process.exit(0);
+  console.log("INCOMPLETE: token is still boxed; retry after its batch reveals.");
+  process.exit(2);
 }
 let startId, jobIdHash, chainConfigHash, chainResultsHash, jobId, chainBackend, chainArchiveURI;
 try {
@@ -72,7 +72,7 @@ const archivePath = archiveArg > -1
 if (!existsSync(archivePath)) {
   console.error(`\narchive not found: ${archivePath}`);
   console.error("(fetch it from the published archive location, or run the oracle's fetch_job.py with instance access)");
-  process.exit(1);
+  process.exit(2);
 }
 const blob = readFileSync(archivePath);
 const doc = JSON.parse(blob.toString());
@@ -134,7 +134,7 @@ if (!sub || sub.unavailable || !sub.isaQasm3Sha256) {
         [path.join(here, "quantum", "check_equivalence.py"), archivePath],
         { env: process.env, timeout: 300_000 }).toString().trim().split("\n").pop());
       checks.submitted = eq.status === "pass"
-        ? `PASS — submitted ISA circuit prepares the SAME ideal state as the published experiment (max Δp ${Number(eq.maxDiff).toExponential(1)}, ${eq.components} components)`
+        ? `PASS: submitted ISA circuit produces the same ideal measurement distribution as the published experiment (max Δp ${Number(eq.maxDiff).toExponential(1)}, ${eq.components} components)`
         : `UNVERIFIED (${eq.reason ?? eq.status})`;
     } catch (e) {
       const line = (e.stdout ?? "").toString().trim().split("\n").pop();
