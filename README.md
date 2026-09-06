@@ -27,6 +27,9 @@ from that number.
 
 ## Verify a token
 
+[Start with the reviewer guide](REVIEWING.md): public verification is open to
+everyone; direct IBM comparison uses your own account with instance Reader access.
+
 ```bash
 node verify.mjs <tokenId>                    # uses local archive/job-<jobId>.json
 node verify.mjs <tokenId> --archive f.json   # explicit archive file
