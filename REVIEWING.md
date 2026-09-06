@@ -36,15 +36,15 @@ internally consistent, so public-record checks alone do not authenticate IBM.
 
 [Open the review section](https://quantumcats.art/#review) and select
 **Request IBM Reader access**. Enter the email used for your IBM Quantum account
-in the popup and submit it. The email is stored privately for the maintainer to
-arrange your invitation. No wallet or GitHub account is required. Submit only
+in the popup and submit it. The email is stored privately and a scheduled worker
+processes requests every five minutes. No wallet or GitHub account is required. Submit only
 the account email; keep API keys and wallet keys private.
 
 GitHub issues remain available for public technical questions. Keep account
 emails and credentials out of those issues.
 
 1. Create your own IBM Cloud account.
-2. The maintainer invites that account and assigns the collection's Reader access.
+2. The worker invites that account and assigns the collection's Reader access.
 3. Accept IBM's invitation and select the invited account and relevant instance
    in IBM Quantum Platform. Inspect the job ID, status, results, and submitted circuit.
 4. Use your own IBM Quantum API key to run the direct comparison:
@@ -57,9 +57,10 @@ node verify.mjs 1 --ibm
 unset IBM_QUANTUM_TOKEN
 ```
 
-The current process requires a maintainer-issued invitation. The website confirms
-that the request was saved; access begins after the invitation is issued and
-accepted. IBM retains job data subject to its
+The website confirms that the request was saved. The server then processes the
+request; new reviewers accept an IBM invitation. Existing account members can
+receive Reader membership directly. Queue size and provider availability can
+extend processing time. IBM retains job data subject to its
 [retention policy](https://quantum.cloud.ibm.com/docs/en/guides/secure-data), so
 perform direct comparisons while the source records remain available.
 
@@ -90,27 +91,32 @@ collaborators group permits job submission, so keep reviewer access separate.
 
 The Reader role permits result reads. It does not grant job creation,
 cancellation, deletion, or account administration. If reviewers need additional
-console resource visibility, add only the necessary instance-scoped Viewer
-policy after checking the service's role definitions. Avoid account-wide access.
+console resource visibility, review the required instance-scoped policy first.
+The automatic worker requires exactly the configured Reader policy and stops if
+its roles or scope change. Avoid account-wide access.
 Instance-level access can include every job in that instance, so keep unrelated
 workloads in a separate instance.
 
-Invite each reviewer's IBM account and add it to this group. Future reviewers
+The scheduled worker invites each reviewer's IBM account into this group. Future reviewers
 inherit the same Reader policy when added, without per-job role changes. IBM
-invitations still require the recipient to accept. Accept review requests
-regardless of NFT ownership; the account email is needed for the invitation.
+invitations require the recipient to accept. Requests are processed regardless of
+NFT ownership; the account email is needed for the invitation.
 
 Website requests are in the site's private Netlify Blobs store,
 `quantum-cats-reviewer-requests`, under `requests/`. Access it through the
 authenticated Netlify project dashboard. The popup has no public request-listing
-endpoint and makes no IBM calls. Review these pending entries, issue the Reader
-invitation, and remove contact records when no longer needed. Treat each email
+endpoint and makes no IBM calls. The private worker records request status and
+invitation progress here. Remove contact records when no longer needed. Treat each email
 as a request, not proof of account ownership; the recipient must accept IBM's
 invitation. The form enforces input validation and submission limits.
 
-An automatic request-and-invitation service is possible as a separate integration.
-It would still need each reviewer's identity and acceptance, and must grant only
-this instance-scoped Reader group. No automatic invitation service is deployed
-in the current site.
+The host's `quantum-cats-reviewers.timer` runs every five minutes and catches up
+after downtime. Provider failures are retried, successful grants are recorded,
+and the two deployment test addresses are skipped. The exact Reader policy is
+checked before grants. The worker cannot be directed to another role by a form
+submission. Interrupted invitations are reconciled against IBM records; ambiguous
+outcomes are never blindly resent. Requests unconfirmed for 24 hours require
+operator inspection while reconciliation continues. Operational instructions are
+in the [site repository](https://github.com/quantumcoinputer/quantum-cats-site#scheduled-reader-invitations).
 
 [IBM access-group and role documentation](https://quantum.cloud.ibm.com/docs/en/guides/access-groups).
