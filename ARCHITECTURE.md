@@ -296,6 +296,11 @@ rehearsal consumed approximately 0.000075 ETH.
 
 ## 12. Evidence
 
+- Mainnet deployment (Robinhood Chain, chain 4663): QuantumCats at
+  `0xd421a43172873811a8b9E6fFEe23acd263dB837a`, CatRenderer at
+  `0x85B78b8C807d13741510C6Dd51a3032C6d6F21b6`. Both sources are verified on
+  Sourcify with exact_match status (chain 4663). The mint token is unset at
+  deployment; `setMintToken` activates minting once the ERC20 exists.
 - Public testnet rehearsal (Robinhood testnet, chain 46630): contract
   `0xc6b3eafeb626662f6e6353441bce232419d58747`; a batch of 2 sealed, job
   `daeinh642tqs73aupkm0` on `ibm_marrakesh`, both tokens revealed. The

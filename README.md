@@ -88,6 +88,13 @@ layout), then run `npm run gen:data && forge test`. The circuit, the oracle
 decoder, and the Solidity tables all derive from the same config; the
 verifier's circuit checks fail loudly if anything drifts.
 
+## Deployments
+
+Mainnet (Robinhood Chain, 4663): QuantumCats
+`0xd421a43172873811a8b9E6fFEe23acd263dB837a`, CatRenderer
+`0x85B78b8C807d13741510C6Dd51a3032C6d6F21b6`, both Sourcify-verified
+(exact_match). Minting activates when `setMintToken` is called.
+
 ## Evidence
 
 Live testnet rehearsal (Robinhood testnet): contract
