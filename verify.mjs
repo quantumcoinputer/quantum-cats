@@ -155,20 +155,36 @@ if (!sub || sub.unavailable || !sub.isaQasm3Sha256) {
 // [5] execution ordering — conservative three-state
 checks.ordering = "INCONCLUSIVE";
 try {
-  const logs = await pub.getLogs({
-    address: process.env.CONTRACT_ADDRESS,
-    event: parseAbiItem(
-      "event JobBound(uint256 indexed batchId, bytes32 jobIdHash, uint16 commitCount)"
-    ),
-    args: { batchId },
-    // public RPCs commonly reject unbounded ranges; scan a recent window
-    // (override with VERIFY_FROM_BLOCK for older batches)
-    fromBlock: process.env.VERIFY_FROM_BLOCK
+  // RPCs cap eth_getLogs ranges, so scan backwards in adaptive chunks
+  // (VERIFY_FROM_BLOCK skips the scan directly to a known lower bound)
+  const bindEvent = parseAbiItem(
+    "event JobBound(uint256 indexed batchId, bytes32 jobIdHash, uint16 commitCount)"
+  );
+  let logs = [];
+  {
+    const latest = await pub.getBlockNumber();
+    const floor = process.env.VERIFY_FROM_BLOCK
       ? BigInt(process.env.VERIFY_FROM_BLOCK)
-      : (await pub.getBlockNumber()) - 2_000_000n < 0n
-        ? 0n
-        : (await pub.getBlockNumber()) - 2_000_000n,
-  });
+      : latest > 5_000_000n ? latest - 5_000_000n : 0n;
+    let chunk = 45_000n;
+    let hi = latest;
+    while (hi >= floor && logs.length === 0) {
+      const lo = hi - chunk + 1n > floor ? hi - chunk + 1n : floor;
+      try {
+        logs = await pub.getLogs({
+          address: process.env.CONTRACT_ADDRESS,
+          event: bindEvent,
+          args: { batchId },
+          fromBlock: lo,
+          toBlock: hi,
+        });
+        hi = lo - 1n;
+      } catch (e) {
+        if (chunk > 2_000n) { chunk /= 2n; continue; }
+        throw e;
+      }
+    }
+  }
   const match = logs.filter((l) => l.args.jobIdHash === jobIdHash).pop();
   if (match) {
     const block = await pub.getBlock({ blockNumber: match.blockNumber });
