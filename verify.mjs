@@ -161,7 +161,13 @@ try {
       "event JobBound(uint256 indexed batchId, bytes32 jobIdHash, uint16 commitCount)"
     ),
     args: { batchId },
-    fromBlock: 0n,
+    // public RPCs commonly reject unbounded ranges; scan a recent window
+    // (override with VERIFY_FROM_BLOCK for older batches)
+    fromBlock: process.env.VERIFY_FROM_BLOCK
+      ? BigInt(process.env.VERIFY_FROM_BLOCK)
+      : (await pub.getBlockNumber()) - 2_000_000n < 0n
+        ? 0n
+        : (await pub.getBlockNumber()) - 2_000_000n,
   });
   const match = logs.filter((l) => l.args.jobIdHash === jobIdHash).pop();
   if (match) {
