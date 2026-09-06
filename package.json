@@ -1,0 +1,19 @@
+{
+  "name": "quantum-cats",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Quantum-collapsed pixel cats: ERC-721 with fully on-chain art, traits measured on IBM Quantum hardware",
+  "scripts": {
+    "oracle": "node oracle/daemon.mjs",
+    "verify": "node verify.mjs",
+    "gen:data": "node script/gen-cat-data.cjs",
+    "test": "forge test",
+    "build": "forge build",
+    "test:oracle": "node --test test/oracle/*.test.mjs",
+    "archive:publish": "node script/publish-archive.mjs"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  }
+}

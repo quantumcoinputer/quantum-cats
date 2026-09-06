@@ -1,0 +1,58 @@
+<!doctype html>
+<title>Quantum Cats Viewer</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f1114; color: #ebedf0; margin: 0; padding: 40px 24px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-family: ui-monospace, monospace; font-size: 22px; }
+  label { display: block; font-size: 12px; color: #98a0aa; margin: 10px 0 3px; font-family: ui-monospace, monospace; }
+  input { width: 100%; box-sizing: border-box; background: #171a1f; color: #ebedf0; border: 1px solid #262b33; border-radius: 4px; padding: 8px 10px; font-family: ui-monospace, monospace; font-size: 13px; }
+  button { margin-top: 14px; background: #8fd977; color: #0f1114; border: 0; border-radius: 4px; padding: 10px 22px; font-weight: 600; cursor: pointer; font-size: 14px; }
+  button:focus-visible { outline: 2px solid #ebedf0; }
+  #out { margin-top: 26px; }
+  #out img { width: 100%; max-width: 480px; image-rendering: pixelated; border: 1px solid #262b33; border-radius: 4px; }
+  #out h2 { font-family: ui-monospace, monospace; }
+  table { border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  td { border-bottom: 1px solid #262b33; padding: 4px 14px 4px 0; }
+  td:first-child { color: #98a0aa; }
+  td:last-child { font-family: ui-monospace, monospace; word-break: break-all; }
+  .err { color: #ff8c3b; font-family: ui-monospace, monospace; }
+</style>
+<div class="wrap">
+  <h1>QUANTUM CATS — ON-CHAIN VIEWER</h1>
+  <label>RPC URL</label>
+  <input id="rpc" value="https://rpc.testnet.chain.robinhood.com">
+  <label>Contract</label>
+  <input id="addr" value="0xc6b3eafeb626662f6e6353441bce232419d58747">
+  <label>Token ID</label>
+  <input id="id" value="1">
+  <button id="go">Fetch from chain</button>
+  <div id="out"></div>
+</div>
+<script>
+document.getElementById("go").addEventListener("click", async () => {
+  const out = document.getElementById("out");
+  out.innerHTML = "fetching…";
+  try {
+    const id = BigInt(document.getElementById("id").value);
+    const selector = "0xc87b56dd"; // tokenURI(uint256)
+    const data = selector + id.toString(16).padStart(64, "0");
+    const res = await fetch(document.getElementById("rpc").value, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call",
+        params: [{ to: document.getElementById("addr").value, data }, "latest"] }),
+    });
+    const hex = (await res.json()).result;
+    // abi-decode string: offset(32) + length(32) + bytes
+    const len = parseInt(hex.slice(2 + 64, 2 + 128), 16);
+    const bytes = hex.slice(2 + 128, 2 + 128 + len * 2);
+    let uri = "";
+    for (let i = 0; i < bytes.length; i += 2) uri += String.fromCharCode(parseInt(bytes.substr(i, 2), 16));
+    const json = JSON.parse(atob(uri.split("base64,")[1]));
+    const rows = (json.attributes || []).map(a =>
+      `<tr><td>${a.trait_type}</td><td>${a.value}</td></tr>`).join("");
+    out.innerHTML = `<img src="${json.image}" alt=""><h2>${json.name}</h2><table>${rows}</table>`;
+  } catch (e) {
+    out.innerHTML = `<p class="err">failed: ${e.message} (CORS-restricted RPCs need a proxy or a different endpoint)</p>`;
+  }
+});
+</script>

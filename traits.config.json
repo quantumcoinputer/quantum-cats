@@ -1,0 +1,217 @@
+{
+  "comment": "Canonical trait schema. DNA is 38 bits, MSB-first: 25 trait bits + 5 schrodinger bits + 8 interference-background bits. Derivation rule: DNA = shot 0 (the first measured shot) of the committed job. Consumed by: quantum/submit_job.py, oracle/decode.mjs, script/gen-cat-data.cjs. Rarity note: all probabilities here are SIMULATED EXPECTATIONS only - real rarity is whatever the hardware deals the minted collection.",
+  "fields": [
+    {
+      "name": "earShape",
+      "bits": 2,
+      "map": [
+        "pointed",
+        "pointed",
+        "rounded",
+        "folded"
+      ],
+      "target": {
+        "pointed": 0.55,
+        "rounded": 0.25,
+        "folded": 0.2
+      }
+    },
+    {
+      "name": "earInner",
+      "bits": 2,
+      "map": [
+        "pink",
+        "pink",
+        "lavender",
+        "charcoal"
+      ],
+      "target": {
+        "pink": 0.55,
+        "lavender": 0.25,
+        "charcoal": 0.2
+      }
+    },
+    {
+      "name": "whiskerStyle",
+      "bits": 2,
+      "map": [
+        "classic",
+        "classic",
+        "none",
+        "long"
+      ],
+      "target": {
+        "classic": 0.55,
+        "none": 0.2,
+        "long": 0.25
+      }
+    },
+    {
+      "name": "whiskerColor",
+      "bits": 1,
+      "map": [
+        "dark",
+        "white"
+      ],
+      "target": {
+        "dark": 0.7,
+        "white": 0.3
+      }
+    },
+    {
+      "name": "eyeShape",
+      "bits": 2,
+      "map": [
+        "round",
+        "round",
+        "wide",
+        "slit"
+      ],
+      "target": {
+        "round": 0.5,
+        "wide": 0.27,
+        "slit": 0.23
+      }
+    },
+    {
+      "name": "eyeColor",
+      "bits": 3,
+      "map": [
+        "green",
+        "green",
+        "blue",
+        "blue",
+        "amber",
+        "copper",
+        "violet",
+        "hetero"
+      ],
+      "target": {
+        "green": 0.3,
+        "blue": 0.22,
+        "amber": 0.16,
+        "copper": 0.14,
+        "violet": 0.12,
+        "hetero": 0.06
+      }
+    },
+    {
+      "name": "fur",
+      "bits": 4,
+      "map": [
+        "gray",
+        "gray",
+        "gray",
+        "gray",
+        "gray",
+        "orange",
+        "orange",
+        "orange",
+        "black",
+        "black",
+        "black",
+        "cream",
+        "cream",
+        "chocolate",
+        "chocolate",
+        "sphynx"
+      ],
+      "target": {
+        "gray": 0.3,
+        "orange": 0.2,
+        "black": 0.17,
+        "cream": 0.14,
+        "chocolate": 0.12,
+        "sphynx": 0.07
+      }
+    },
+    {
+      "name": "pattern",
+      "bits": 3,
+      "map": [
+        "solid",
+        "solid",
+        "solid",
+        "tuxedo",
+        "tuxedo",
+        "patch",
+        "tiger",
+        "calico"
+      ],
+      "target": {
+        "solid": 0.45,
+        "tuxedo": 0.22,
+        "patch": 0.14,
+        "tiger": 0.14,
+        "calico": 0.05
+      },
+      "exact": true
+    },
+    {
+      "name": "accessory",
+      "bits": 3,
+      "map": [
+        "none",
+        "none",
+        "beanieBlue",
+        "beanieRed",
+        "beaniePurple",
+        "cig",
+        "cross",
+        "scarf"
+      ],
+      "target": {
+        "none": 0.32,
+        "beanieBlue": 0.11,
+        "beanieRed": 0.11,
+        "beaniePurple": 0.11,
+        "cig": 0.12,
+        "cross": 0.06,
+        "scarf": 0.17
+      }
+    },
+    {
+      "name": "bg",
+      "bits": 3,
+      "map": [
+        "sky",
+        "sky",
+        "purple",
+        "sand",
+        "green",
+        "rose",
+        "rose",
+        "dusk"
+      ],
+      "target": {
+        "sky": 0.3,
+        "purple": 0.14,
+        "sand": 0.14,
+        "green": 0.12,
+        "rose": 0.24,
+        "dusk": 0.06
+      }
+    }
+  ],
+  "schrodinger": {
+    "qubits": 5,
+    "p1": 0.3333333333333333,
+    "comment": "Entangled cat state: sqrt(242/243)|00000> + sqrt(1/243)|11111>. All-ones triggers the skeleton; exact 1/243.",
+    "catState": true
+  },
+  "totalBits": 38,
+  "interference": {
+    "qubits": 8,
+    "phasesPi": [
+      0.25,
+      0.75,
+      1.25,
+      1.75,
+      2.25,
+      2.75,
+      3.25,
+      3.75
+    ],
+    "comment": "Background register: H^8 -> Rz(pi*phasesPi[k]) -> CZ chain (7 gates) -> H^8. Bits render as 2px diagonal fringe bands. Ideal stats: marginals 0.5 each, entropy 7.72 bits, max pattern 2.0x uniform, all 256 reachable."
+  }
+}
