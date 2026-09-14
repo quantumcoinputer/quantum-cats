@@ -51,6 +51,11 @@ as the published experiment), and an optional live retrieval diff.
 
 ## Setup
 
+Contributors and maintainers follow the [Qiskit Code of Conduct](CODE_OF_CONDUCT.md).
+The [CI workflow](.github/workflows/ci.yml) checks the contracts, oracle tests,
+generated art tables, Qiskit circuit construction, and archived circuit equivalence.
+These checks require no IBM credentials, wallet keys, or live hardware jobs.
+
 ```bash
 curl -L https://foundry.paradigm.xyz | bash && foundryup
 npm install
