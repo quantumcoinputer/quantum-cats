@@ -1,5 +1,7 @@
 # Quantum Cats
 
+[![Qiskit Ecosystem](https://img.shields.io/endpoint?url=https%3A%2F%2Fqiskit.github.io%2Fecosystem%2Fb%2F8607d782)](https://qiskit.github.io/ecosystem/p/8607d782/)
+
 A 10,000-supply ERC-721 collection on Robinhood Chain in which every trait of
 every token, including the fringe pattern of its background, derives from a
 measurement of a 38-qubit circuit executed on IBM Quantum hardware. Art and
