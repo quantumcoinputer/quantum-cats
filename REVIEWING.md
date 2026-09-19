@@ -87,11 +87,33 @@ the account email; keep API keys and wallet keys private.
 GitHub issues remain available for public technical questions. Keep account
 emails and credentials out of those issues.
 
+### Access covers both originating instances
+
+IBM authorizes job reads per instance. The `Quantum Cats Reviewers` group has
+one Reader policy for `quantum-cats-open` and one for `quantum-cats-paygo`.
+Submit one access request and accept the invitation. Existing members of this
+group inherit both policies; they do not need a second request or a separate
+invitation for paid jobs. The same authorized IBM API key can read both.
+These group policies grant neither job submission nor billing/account access.
+
+| Example | Instance | IBM job ID |
+| --- | --- | --- |
+| Mainnet Cat 431, batch 16, shot 2 | `quantum-cats-open` | `daerfrdnj4cs73afi230` |
+| Mainnet Cat 1201, batch 156, shot 0 | `quantum-cats-paygo` | `dakrq3c62pvc739puh4g` |
+
+The instance selects which job records you can read. The backend name, such as
+`ibm_kingston`, identifies the quantum computer and does not identify the plan.
+If a job is absent from Workloads, check the other instance in the invited
+account. The verifier retrieves by job ID across the instances your key can
+access. Use `node verify.mjs 1201 --ibm` for the paid-instance example after
+completing the setup and credential steps below.
+
 1. Create your own [IBM Cloud account](https://cloud.ibm.com/registration), then
    submit that account's email through the website form.
 2. Accept IBM's invitation. In IBM Cloud or IBM Quantum Platform, switch from
    your personal account to the account you were invited to, and locate the
-   `quantum-cats-open` instance. Membership is in `Quantum Cats Reviewers`.
+   `quantum-cats-open` or `quantum-cats-paygo` instance where the job ran.
+   Membership is in `Quantum Cats Reviewers`.
 3. Open [IBM Quantum Platform](https://quantum.cloud.ibm.com/), select that
    instance, and find the job ID printed by the verifier under Workloads. The
    job's completed status, backend, and results can be inspected there.
@@ -150,7 +172,8 @@ hardware provider; this workflow does not produce an IBM digital signature.
   `VERIFY_FROM_BLOCK` to the deployment block, or `0` for a complete, slower scan.
 - **IBM retrieval unavailable / no instances / job not found:** confirm the
   invitation was accepted, the invited account was selected when creating the
-  API key, and the target instance is `quantum-cats-open`. Data retention and
+  API key, and the target instance is the originating `quantum-cats-open` or
+  `quantum-cats-paygo` instance. Data retention and
   provider outages can also prevent retrieval. An incomplete check establishes
   neither a match nor a mismatch.
 - **FAIL:** retain the output and report which check disagreed in a GitHub issue.
@@ -189,20 +212,20 @@ Sources: [IBM public-access scope](https://cloud.ibm.com/docs/account?topic=acco
 
 The `Quantum Cats Reviewers` access group is configured in IBM Cloud IAM with
 the **Reader service role**, restricted to the collection's `quantum-cats-open`
-instance. Use this group for reviewers. For any future originating instance,
-configure and verify the same restricted Reader policy. IBM's standard
+and `quantum-cats-paygo` instances. Use this group for reviewers. For any future
+originating instance, configure and verify the same restricted Reader policy. IBM's standard
 collaborators group permits job submission, so keep reviewer access separate.
 
 The Reader role permits result reads. It does not grant job creation,
 cancellation, deletion, or account administration. If reviewers need additional
 console resource visibility, review the required instance-scoped policy first.
-The automatic worker requires exactly the configured Reader policy and stops if
-its roles or scope change. Avoid account-wide access.
+The automatic worker requires exactly one configured Reader policy per instance
+and stops if its roles or scope change. Avoid account-wide access.
 Instance-level access can include every job in that instance, so keep unrelated
 workloads in a separate instance.
 
 The scheduled worker invites each reviewer's IBM account into this group. Future reviewers
-inherit the same Reader policy when added, without per-job role changes. IBM
+inherit both Reader policies when added, without per-job role changes. IBM
 invitations require the recipient to accept. Requests are processed regardless of
 NFT ownership; the account email is needed for the invitation.
 
